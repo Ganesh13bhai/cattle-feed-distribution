@@ -1,6 +1,52 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { useApp } from '../App'; // To get the token
+// Import our new components
+import Sidebar from '../components/Sidebar';
+import ProductGrid from '../components/ProductGrid';
+// A simple debounce function to prevent spamming the API on every keystroke
+function useDebounce(value, delay) {
+  const [debouncedValue, setDebouncedValue] = useState(value);
+function StorePage() {
+  // We can get the token, but we don't need it for this fetch
+  // const { token } = useApp(); 
+  // State for all our filters
+  const [searchTerm, setSearchTerm] = useState('');
+  const [categories, setCategories] = useState([]);
+  const debouncedSearchTerm = useDebounce(searchTerm, 500);
+
+  const fetchProducts = useCallback(async () => {
+  // Build the query string
+  const params = new URLSearchParams();
+  if (debouncedSearchTerm) {
+    try {
+      const response = await fetch(`http://localhost:8000/api/products?${params.toString()}`, {
+        method: 'GET',
+      // Handle error display
+    } finally {
+      setLoading(false);
+  // Fetch products whenever the filters change
+  useEffect(() => {
+    fetchProducts();
+  // Handler for category checkbox changes
+  const handleCategoryChange = (e) => {
+    const { value, checked } = e.target;
+  return (
+    <div className="flex flex-col md:flex-row max-w-7xl mx-auto p-4 gap-6">
+      {/* 1. The Sidebar */}
+      {/* 2. The Main Content Area */}
+      <div className="flex-1">
+        <h1 className="text-3xl font-bold text-gray-800 mb-6 capitalize">
+        <ProductGrid loading={loading} products={products} />
+      </div>
+    </div>
+  );
+}
+
+export default StorePage;
+import React, { useState, useEffect, useCallback } from 'react';
+import { useSearchParams } from 'react-router-dom';
+import { useApp } from '../App'; // To get the token
 
 // Import our new components
 import Sidebar from '../components/Sidebar';

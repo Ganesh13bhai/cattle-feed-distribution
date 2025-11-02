@@ -48,7 +48,7 @@ function Header() {
 
           {/* --- NEW: Show real user name --- */}
           <div className="text-gray-600 hidden md:block">
-            👤 {user ? user.full_name : 'Loading...'}
+              👤 {user ? user.full_name : '...'}
           </div>
           <button 
             onClick={logout} 

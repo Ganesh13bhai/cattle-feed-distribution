@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useSearchParams } from 'react-router-dom';
+import { useSearchParams, useNavigate } from 'react-router-dom'; // <-- 1. Import useNavigate
 import { useApp } from '../App';
 
 function ProductCard({ product }) {
@@ -7,27 +7,31 @@ function ProductCard({ product }) {
   const mode = searchParams.get('mode') || 'retail';
   
   const { addToCart, loadingCart } = useApp();
+  const navigate = useNavigate(); // <-- 2. Get the navigate function
   const [isAdding, setIsAdding] = useState(false);
-  const [error, setError] = useState(''); // <-- NEW: Error state
+  const [error, setError] = useState('');
 
   const priceToShow = (mode === 'wholesale') ? product.wholesale_price : product.price;
 
-  const handleAddToCart = async () => {
+  // 3. This function now handles BOTH modes
+  const handleButtonAction = async () => {
     if (loadingCart || isAdding) return;
     
-    setIsAdding(true);
-    setError(''); // Clear previous errors
-    
-    try {
-      // Call the global addToCart function
-      await addToCart(product.id, 1, mode); 
-    } catch (err) {
-      // --- FIX: Catch the error and display it ---
-      setError(err.message);
-      // Remove error message after 3 seconds
-      setTimeout(() => setError(''), 3000);
-    } finally {
-      setIsAdding(false);
+    if (mode === 'retail') {
+      // --- RETAIL FLOW ---
+      setIsAdding(true);
+      setError('');
+      try {
+        await addToCart(product.id, 1, mode); 
+      } catch (err) {
+        setError(err.message);
+        setTimeout(() => setError(''), 3000);
+      } finally {
+        setIsAdding(false);
+      }
+    } else {
+      // --- WHOLESALE FLOW ---
+      navigate(`/negotiate/${product.id}?mode=wholesale`);
     }
   };
 
@@ -69,7 +73,7 @@ function ProductCard({ product }) {
            </p>
            
            <button 
-             onClick={handleAddToCart}
+             onClick={handleButtonAction} // <-- 4. Use the new handler function
              disabled={isAdding || loadingCart}
              className={`w-full text-white font-bold py-3 px-4 rounded-lg transition duration-300 ${
                mode === 'wholesale' 

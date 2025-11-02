@@ -9,6 +9,7 @@ import ModeSelectionPage from './pages/ModeSelectionPage';
 import StorePage from './pages/StorePage';
 import CartPage from './pages/CartPage';
 import Header from './components/Header';
+import NegotiationPage from './pages/NegotiationPage'; // <-- 1. ADD THIS IMPORT
 
 // 1. Create an Authentication & Cart Context
 const AppContext = createContext();
@@ -187,6 +188,11 @@ function AppContent() {
           <Route path="/mode" element={<ProtectedRoute><ModeSelectionPage /></ProtectedRoute>} />
           <Route path="/store" element={<ProtectedRoute><StorePage /></ProtectedRoute>} />
           <Route path="/cart" element={<ProtectedRoute><CartPage /></ProtectedRoute>} />
+          {/* --- 2. ADD THIS NEW ROUTE --- */}
+          <Route 
+            path="/negotiate/:productId" 
+            element={<ProtectedRoute><NegotiationPage /></ProtectedRoute>} 
+          />
         </Routes>
       </main>
     </div>
