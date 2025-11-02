@@ -181,7 +181,7 @@ function AppContent() {
 
   return (
     <div className="bg-gray-50 min-h-screen">
-      {isLoggedIn && <Header />}
+      {isLoggedIn && <Header onVoiceSearch={(text) => setSearchTerm(text)} />}
       <main className={isLoggedIn ? "pt-[68px]" : ""}>
         <Routes>
           <Route path="/" element={<LoginPage />} />
